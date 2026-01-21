@@ -69,7 +69,7 @@ while pregunta != 'salir':
 
     client = InferenceClient(
         #'Qwen/Qwen2.5-1.5B-Instruct',
-        token = 'Your Hugging face key'
+        #token = 'YOUR HUGGING FACE TOKEN' #unmark this line
     )
 
     contexto = " ".join(
