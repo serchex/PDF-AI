@@ -3,6 +3,23 @@ from PIL import Image
 from pytesseract import image_to_string
 import io
 import re
+from rapidfuzz import fuzz
+import cv2
+import clear
+import numpy as np
+
+def clean_text(text: str) -> str:
+    text = text.replace('\r', '\n')
+    #caracteres basura OCR
+    text = re.sub(r'[|~¬]', '', text)
+    #unir letras separadas: E J E M P L O
+    text = re.sub(r'(?<=\b[A-Z])\s+(?=[A-Z]\b)', '', text)
+    #reducir espacios multiples
+    text = re.sub(r' {2,}', ' ', text)
+    #reducir saltos de linea excesivos
+    text = re.sub(r'\n{3,}', '\n\n', text)
+
+    return text.strip()
 
 def texto_puro(page):
     texto = page.get_text()
@@ -41,7 +58,7 @@ def pdf_text(opt):
             bloques.append({
                 'page': i+1,
                 'source': 'text',
-                'content': re.sub(r'\n{2,}','\n',texto)
+                'content': clean_text(texto)
             })
         if img:
             ocr_txt = img_tobytes(img,page).strip()
@@ -49,6 +66,62 @@ def pdf_text(opt):
                 bloques.append({
                     'page': i+1,
                     'source': 'ocr',
-                    'content': re.sub(r'\n{2,}','\n',ocr_txt)
+                    'content': clean_text(ocr_txt)
                 })
     return bloques
+
+def build_pages(pdf_path):
+    bloques = pdf_text(pdf_path)
+    pages = []
+
+    for b in bloques:
+        pages.append({
+            "doc_id": pdf_path,
+            "page": b["page"],
+            "source": b["source"],
+            "text": b["content"]
+        })
+
+    return pages
+
+
+def find_mentions(pages, name, threshold=80):
+    name = name.lower()
+    hits = []
+
+    for p in pages:
+        text = p["text"].lower()
+        score = fuzz.partial_ratio(name, text)
+
+        if score >= threshold:
+            hits.append({
+                "doc_id": p["doc_id"],
+                "page": p["page"],
+                "source": p["source"],
+                "score": score,
+                "text": p["text"]
+            })
+
+    return hits
+
+from collections import defaultdict
+
+def group_by_page(hits):
+    grouped = defaultdict(list)
+    for h in hits:
+        key = (h["doc_id"], h["page"])
+        grouped[key].append(h)
+    return grouped
+
+def build_context(grouped_hits):
+    contexts = []
+
+    for (doc_id, page), items in grouped_hits.items():
+        text = items[0]["text"]
+        contexts.append({
+            "doc_id": doc_id,
+            "page": page,
+            "context": text
+        })
+
+    return contexts

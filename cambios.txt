@@ -1,35 +1,8 @@
 # Se ajusto el prompt en content, se agregaron las metadatas, se agrego la linea de includes 15/01/2026
 
-#Se ajustaron las diferencias entre la historia y el cv con orc vs text en collection.query salio bien 20/01/2026 
-resultado = collection.query(
-        query_embeddings=query_emb, 
-        n_results=3,
-        #where={'source':'txt'},
-        include=['documents','embeddings','metadatas','distances']
-        )
-    print(resultado['distances'], resultado['metadatas'])
+#Una vez que supe como hacer la limpieza con regex y hacer la separacion por hints, decidi cambiar a resumenes de roles en documentos pdf por nombres
 
-    # print(resultado['distances'][0])
-    # print(max(resultado['distances'][0]))
-    if resultado['distances'][0][0] > 1:
-        resultado = collection.query(
-            query_embeddings=query_emb,
-            n_results=3,
-            where={'source':'text'},
-            #include=['documents','embeddings','metadatas','distances']
-        )
-    else:
-        resultado = collection.query(
-            query_embeddings=query_emb,
-            n_results=3,
-            where={'source':'ocr'},
-            #include=['documents','embeddings','metadatas','distances']
-        )
-        #print('else:',resultado['distances'], resultado['metadatas'])
-    print(resultado['distances'], resultado['metadatas'])
-
-
-Tareas OpenCV
+Tareas OpenCV huggingface-hub-0.36.0 tokenizers-0.22.2 transformers-4.57.6
 binariza
 quita ruido
 corrige rotación
