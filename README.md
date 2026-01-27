@@ -5,3 +5,5 @@ de reconocer en que documentos esta dicha persona y que relacion hay entre si.
 
 Problemas a resolver:
 -Crear un modelo GANs para mejora exclusiva de texto
+
+Aun no hay instrucciones de instalacion, por ahora este sera un medio de documentar el avance del codigo y registrar las versiones
