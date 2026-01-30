@@ -18,11 +18,16 @@ Este proyecto es un **pipeline completo para extraer, limpiar, analizar y consul
 </p>
 
 <p align="center">
-  <em>Antes y depues</em>
+  <em>Antes y Depues de pasar la imagen por el modelo GAN</em>
+  <em>(Extrae la imgaen del PDF escaneado y la pone en la memoria RAM)</em>
 </p>
 
 ---
-
+<p align="center">
+  <em>RESULTADOS</em>
+  <img src="images/linkedin.jpeg" alt="Imagen original" width="350">
+</p>
+---
 ##  Descripción de cada archivo
 
 ### `clear.py`
