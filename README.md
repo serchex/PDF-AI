@@ -26,7 +26,7 @@ Este proyecto es un **pipeline completo para extraer, limpiar, analizar y consul
 <h3 align="center">RESULTADOS</h3>
 
 <p align="center">
-  <img src="images/linkedin.jpg" alt="Resultado final" width="700">
+  <img src="images/linkedin.jpg" alt="Resultado final" width="900">
 </p>
 ---
 ##  Descripción de cada archivo
