@@ -1,4 +1,4 @@
-
+EN VERSIONES FUTURAS SE DESPLEGARA EN LA WEB
 =======
 # Pipeline de OCR, limpieza y análisis de PDFs
 
