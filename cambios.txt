@@ -1,6 +1,15 @@
-# Se ajusto el prompt en content, se agregaron las metadatas, se agrego la linea de includes 15/01/2026
+# Se ajusto el prompt en content, se agregaron las metadatas, se agrego la linea de includes [15/01/2026]
 
-#Una vez que supe como hacer la limpieza con regex y hacer la separacion por hints, decidi cambiar a resumenes de roles en documentos pdf por nombres
+#Una vez que supe como hacer la limpieza con regex y hacer la separacion por hints, decidi cambiar a resumenes de roles en documentos pdf por nombres [25/01/2026]
+
+#Se agrego y finalmente se pudo optimizar la calidad de las imagenes, tuve que buscar varios modelos ya que hacer el mio propio iba a tomar mucho tiempo y no dispongo de 10GiB de memoria en tarjeta grafica, que es lo minimo considerable para hacer un entrenamiento de una GAN para documentos.
+
+    Probe x4 plus anime que afina los bordes de las imagenes de anime
+    Probe x4 plus general que afina bordes de imagenes en general
+    (Ambos me dieron resultados iguales)
+
+    Hasta que probe con DE-GAN (https://github.com/dali92002/DE-GAN)
+    Su opcion de deblur fue la que mejoro la calidad de la imagen con ruido, pero no era suficiente, al pasar el resultado de DE-GAN al modelo escrito en clear.py, la resolucion de la imagen mejoro considerablemente a diferencia de solo hacerlo con x4 plus, el OCR sigue soltando caracteres incorrectos, pero la calidad del OCR aumento un ~80% despues de la mejora de imagenes con ambos modelos combinados y REGEX [30/01/2026]
 
 Tareas OpenCV huggingface-hub-0.36.0 tokenizers-0.22.2 transformers-4.57.6
 binariza

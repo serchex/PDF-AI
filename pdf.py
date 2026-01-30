@@ -1,52 +1,43 @@
 import fitz
 from PIL import Image
-from pytesseract import image_to_string
 import io
-import re
 from rapidfuzz import fuzz
-import cv2
-import clear
 import numpy as np
+Image.MAX_IMAGE_PIXELS = None
+import ocr_img
 
-def clean_text(text: str) -> str:
-    text = text.replace('\r', '\n')
-    #caracteres basura OCR
-    text = re.sub(r'[|~¬]', '', text)
-    #unir letras separadas: E J E M P L O
-    text = re.sub(r'(?<=\b[A-Z])\s+(?=[A-Z]\b)', '', text)
-    #reducir espacios multiples
-    text = re.sub(r' {2,}', ' ', text)
-    #reducir saltos de linea excesivos
-    text = re.sub(r'\n{3,}', '\n\n', text)
+# def texto_puro(page):
+#     texto = page.get_text()
+#     return texto
 
-    return text.strip()
+# def OCR(img):
+#     image = Image.open(img)
+#     texto = image_to_string(image, lang='spa')
+#     return texto
 
-def texto_puro(page):
-    texto = page.get_text()
-    return texto
-
-def OCR(img):
-    image = Image.open(img)
-    texto = image_to_string(image, lang='spa')
-    return texto
-
-def img_incrustada(page,doc):
-    for img_index, img in enumerate(page.get_images()):
-        xref = img[0]
-        pix = fitz.Pixmap(doc, xref)
-        if pix.n < 5:
-            pix.save(f'Imagen_extraida_{img_index}.png')
-        else:
-            pix = fitz.Pixmap(fitz.csRGB, pix)
-            pix.save(f'imagen_extraida_{img_index}.png')
+# def img_incrustada(page,doc):
+#     for img_index, img in enumerate(page.get_images()):
+#         xref = img[0]
+#         pix = fitz.Pixmap(doc, xref)
+#         if pix.n < 5:
+#             pix.save(f'Imagen_extraida_{img_index}.png')
+#         else:
+#             pix = fitz.Pixmap(fitz.csRGB, pix)
+#             pix.save(f'imagen_extraida_{img_index}.png')
 
 #carga la imagen a la RAM
 def img_tobytes(img,page):
-    pix = page.get_pixmap(dpi=img[0][3])
+    dpi = min(img[0][3], 300)
+    pix = page.get_pixmap(dpi=dpi)
     img_bytes = pix.tobytes("png")
     imagen = Image.open(io.BytesIO(img_bytes))
-    texto = image_to_string(imagen)
+
+    MAX_SIZE = (2000, 2000)
+    imagen.thumbnail(MAX_SIZE, Image.LANCZOS)
+    np_img = np.array(imagen)
+    texto = ocr_img.ocr_clean(np_img)
     return texto
+
 
 def pdf_text(opt):
     doc = fitz.open(opt)
@@ -58,7 +49,7 @@ def pdf_text(opt):
             bloques.append({
                 'page': i+1,
                 'source': 'text',
-                'content': clean_text(texto)
+                'content': ocr_img.clean_text(texto)
             })
         if img:
             ocr_txt = img_tobytes(img,page).strip()
@@ -66,9 +57,11 @@ def pdf_text(opt):
                 bloques.append({
                     'page': i+1,
                     'source': 'ocr',
-                    'content': clean_text(ocr_txt)
+                    'content': ocr_txt
                 })
     return bloques
+
+print(pdf_text('2.pdf'))
 
 def build_pages(pdf_path):
     bloques = pdf_text(pdf_path)
@@ -125,3 +118,27 @@ def build_context(grouped_hits):
         })
 
     return contexts
+
+# def remove_noise_lines(text: str) -> str:
+#     lines = text.splitlines()
+#     clean = []
+#     for line in lines:
+#         letters = re.findall(r'[A-Za-zÁÉÍÓÚÑáéíóúñ]', line)
+#         if len(letters) >= 5:
+#             clean.append(line)
+#     return '\n'.join(clean)
+# def fix_ocr_confusions(text: str) -> str:
+#     text = re.sub(r'(?<=[A-Za-zÁÉÍÓÚÑáéíóúñ])0(?=[A-Za-zÁÉÍÓÚÑáéíóúñ])', 'O', text)
+#     text = re.sub(r'(?<=\d)[lI](?=\d)', '1', text)
+#     return text
+# def clean_text(text: str) -> str:
+#     text = unicodedata.normalize("NFKC", text)
+#     text = text.replace('\r', '\n')
+#     text = re.sub(r'[|~¬<>:=\[\]\(\)\{\}]', ' ', text)
+#     text = re.sub(r'(?<=\b[A-ZÁÉÍÓÚÑ])\s+(?=[A-ZÁÉÍÓÚÑ]\b)', '', text)
+#     text = fix_ocr_confusions(text)
+#     text = remove_noise_lines(text)
+#     text = re.sub(r'\n(?=[a-záéíóúñ])', ' ', text, flags=re.IGNORECASE)
+#     text = re.sub(r'\s{2,}', ' ', text)
+#     text = re.sub(r'\n{3,}', '\n\n', text)
+#     return text.strip()
