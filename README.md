@@ -12,7 +12,16 @@ Este proyecto es un **pipeline completo para extraer, limpiar, analizar y consul
 * Consulta semántica con LLM (HuggingFace) [Qwen 7B]
 
 ---
+<p align="center">
+  <img src="images/2.jpeg" alt="Imagen original" width="700">
+</p>
+<p align="center">
+  <img src="resultsGAN/step5_edges_refined.png" alt="Imagen despues de GAN" width="700">
+</p>
 
+<p align="center">
+  <em>Antes y depues</em>
+</p>
 
 ---
 
