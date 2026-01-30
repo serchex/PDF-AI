@@ -20,6 +20,7 @@ Este proyecto es un **pipeline completo para extraer, limpiar, analizar y consul
 <p align="center">
   <em>Antes y Despues de pasar la imagen por el modelo GAN</em>
   <p align="center">(Extrae la imgaen del PDF escaneado y la pone en la memoria RAM)</p>
+  <p align="center">Esto evita que guarde imagenes en el disco y se llene el almacenamiento</p>
 </p>
 
 ---
