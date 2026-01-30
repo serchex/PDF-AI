@@ -13,10 +13,8 @@ Este proyecto es un **pipeline completo para extraer, limpiar, analizar y consul
 
 ---
 <p align="center">
-  <img src="images/2.jpeg" alt="Imagen original" width="700">
-</p>
-<p align="center">
-  <img src="resultsGAN/step5_edges_refined.png" alt="Imagen despues de GAN" width="700">
+  <img src="images/2.jpeg" alt="Imagen original" width="350">
+  <img src="resultsGAN/step5_edges_refined.png" alt="Imagen después de GAN" width="350">
 </p>
 
 <p align="center">
